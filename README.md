@@ -1,0 +1,2 @@
+# GlamourGrid
+Salon Management System 

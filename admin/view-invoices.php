@@ -4,59 +4,95 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include('includes/db_connect.php');
 
-if (!isset($_SESSION['bpmsaid']) || strlen($_SESSION['bpmsaid']) == 0) {
+if (strlen($_SESSION['bpmsaid']) == 0) {
     header('location:logout.php');
     exit();
 }
 
-$invoices_result = mysqli_query($conn, "SELECT i.id, u.name as user_name, s.service_name, i.price, i.quantity, i.total_amount, i.status, i.posting_date 
-                                        FROM invoice i 
-                                        JOIN users u ON i.user_id = u.id 
-                                        JOIN services s ON i.service_id = s.id");
+// Ensure invoice ID is provided
+if (!isset($_GET['invoiceid']) || empty($_GET['invoiceid'])) {
+    die("Error: No invoice ID found.");
+}
+
+$invoiceid = intval($_GET['invoiceid']);
+
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>View Invoices</title>
-</head>
+    <title>GlarmourGrid || Invoice Details</title>
+    <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="css/style.css" rel='stylesheet' type='text/css' />
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script>new WOW().init();</script>
+</head> 
 <body class="cbp-spmenu-push">
-<div class="main-content">
+    <div class="main-content">
         <?php include_once('includes/sidebar.php'); ?>
         <?php include_once('includes/header.php'); ?>
 
-    <h1>Invoices</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>User Name</th>
-                <th>Service Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total Amount</th>
-                <th>Status</th>
-                <th>Posting Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($invoice = mysqli_fetch_assoc($invoices_result)) { ?>
-                <tr>
-                    <td><?php echo $invoice['id']; ?></td>
-                    <td><?php echo htmlspecialchars($invoice['user_name']); ?></td>
-                    <td><?php echo htmlspecialchars($invoice['service_name']); ?></td>
-                    <td><?php echo htmlspecialchars($invoice['price']); ?></td>
-                    <td><?php echo htmlspecialchars($invoice['quantity']); ?></td>
-                    <td><?php echo htmlspecialchars($invoice['total_amount']); ?></td>
-                    <td><?php echo htmlspecialchars($invoice['status']); ?></td>
-                    <td><?php echo htmlspecialchars($invoice['posting_date']); ?></td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-    <?php include_once('includes/footer.php'); ?>
+        <div id="page-wrapper">
+            <div class="main-page">
+                <div class="tables">
+                    <h3 class="title1">Invoice Details</h3>
+                    <div class="table-responsive bs-example widget-shadow">
+                        <h4>Invoice #<?php echo $invoiceid; ?></h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Service Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Posting Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $query = "SELECT invoice.*, services.service_name 
+                                          FROM invoice 
+                                          JOIN services ON invoice.service_id = services.id 
+                                          WHERE invoice.billing_id = '$invoiceid'";
+                                $result = mysqli_query($con, $query);
+                                $cnt = 1;
+                                $grandTotal = 0;
+
+                                while ($row = mysqli_fetch_array($result)) {
+                                    $total = $row['price'] * $row['quantity'];
+                                    $grandTotal += $total;
+                                ?>
+                                    <tr>
+                                        <th scope="row"><?php echo $cnt; ?></th>
+                                        <td><?php echo $row['service_name']; ?></td>
+                                        <td><?php echo number_format($row['price'], 2); ?></td>
+                                        <td><?php echo $row['quantity']; ?></td>
+                                        <td><?php echo number_format($total, 2); ?></td>
+                                        <td><?php echo $row['status']; ?></td>
+                                        <td><?php echo $row['posting_date']; ?></td>
+                                    </tr>
+                                <?php 
+                                    $cnt++;
+                                } 
+                                ?>
+                                <tr>
+                                    <td colspan="4" align="right"><strong>Grand Total:</strong></td>
+                                    <td><strong><?php echo number_format($grandTotal, 2); ?></strong></td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php include_once('includes/footer.php'); ?>
     </div>
 
     <script src="js/bootstrap.js"></script>

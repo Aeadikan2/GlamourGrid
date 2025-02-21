@@ -1,131 +1,166 @@
 <?php
 session_start();
-include('includes/db_conect.php');
-if (!isset($_SESSION['bpmsaid']) || $_SESSION['bpmsaid'] == 0) {
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+include('includes/db_connect.php');
+
+if (!isset($_SESSION['bpmsaid']) || strlen($_SESSION['bpmsaid']) == 0) {
     header('location:logout.php');
     exit();
 }
 
-if (!isset($_GET['addid'])) {
-    echo "No user ID provided.";
-    exit();
-}
+if (isset($_POST['submit'])) {
+    $uid = isset($_GET['addid']) ? intval($_GET['addid']) : 0;
+    $invoiceid = mt_rand(100000000, 999999999);
 
-$userId = intval($_GET['addid']);
-
-$user_result = mysqli_query($con, "SELECT id, name FROM users WHERE id = $userId");
-if ($user_result === false) {
-    die("Error executing query: " . mysqli_error($con));
-}
-
-$user = mysqli_fetch_assoc($user_result);
-
-if (!$user) {
-    echo "<script>alert('No user found with the given ID.');</script>";
-    echo "<script>window.location.href='customer-list.php';</script>";
-    exit();
-}
-
-$services_result = mysqli_query($con, "SELECT id, service_name, price FROM services");
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $serviceId = $_POST['service_id'];
-    $price = $_POST['price'];
-    $quantity = $_POST['quantity'];
-    $totalAmount = $price * $quantity;
-
-    $invoiceId = uniqid($userId . '-');
-
-    $stmt = $con->prepare("INSERT INTO invoice (user_id, service_id, billing_id, price, quantity, total_amount, status, posting_date) VALUES (?, ?, ?, ?, ?, ?, 'Pending', NOW())");
-    $stmt->bind_param("iisidd", $userId, $serviceId, $invoiceId, $price, $quantity, $totalAmount);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Service assigned successfully and invoice generated!');</script>";
-        echo "<script>window.location.href='customer-list.php'</script>";
-    } else {
-        echo "<script>alert('Failed to assign service: " . $stmt->error . "');</script>";
+    // Check if user exists
+    $checkUser = mysqli_query($con, "SELECT id FROM users WHERE id = $uid");
+    if (mysqli_num_rows($checkUser) == 0) {
+        echo '<script>alert("Error: Invalid user ID.")</script>';
+        echo "<script>window.location.href ='invoices.php'</script>";
+        exit();
     }
 
-    $stmt->close();
+    // Ensure 'sids' is set and is an array
+    $sid = isset($_POST['sids']) ? $_POST['sids'] : [];
+
+    if (count($sid) > 0) {
+        foreach ($sid as $svid) {
+            // Fetch the price of the service
+            $serviceQuery = mysqli_query($con, "SELECT price FROM services WHERE ID = $svid");
+            if ($serviceData = mysqli_fetch_assoc($serviceQuery)) {
+                $price = $serviceData['price'];
+
+                // Insert into invoice table
+                $query = "INSERT INTO invoice (user_id, service_id, billing_id, price, quantity, status) 
+                          VALUES ('$uid', '$svid', '$invoiceid', '$price', 1, 'Pending')";
+
+                if (!mysqli_query($con, $query)) {
+                    echo '<script>alert("Error: ' . mysqli_error($con) . '")</script>';
+                }
+            } else {
+                echo '<script>alert("Error: Service ID ' . $svid . ' not found.")</script>';
+            }
+        }
+
+        echo '<script>alert("Invoice created successfully. Invoice number is ' . $invoiceid . '")</script>';
+        echo "<script>window.location.href ='invoices.php'</script>";
+    } else {
+        echo '<script>alert("Please select at least one service.")</script>';
+    }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Add Customer Services</title>
+    <title>GlamourGrid || Assign Services</title>
+
+    <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <!-- Font Awesome -->
     <link href="css/font-awesome.css" rel="stylesheet">
-    <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css">
+    <!-- Google Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <!-- Animate CSS -->
     <link href="css/animate.css" rel="stylesheet" type="text/css" media="all">
+
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/modernizr.custom.js"></script>
     <script src="js/wow.min.js"></script>
     <script>new WOW().init();</script>
+
+    <!-- Metis Menu -->
     <script src="js/metisMenu.min.js"></script>
     <script src="js/custom.js"></script>
     <link href="css/custom.css" rel="stylesheet">
 </head>
+
 <body class="cbp-spmenu-push">
     <div class="main-content">
+        <!-- Sidebar -->
         <?php include_once('includes/sidebar.php'); ?>
+        <!-- Header -->
         <?php include_once('includes/header.php'); ?>
 
         <div id="page-wrapper">
             <div class="main-page">
                 <div class="tables">
-                    <h3 class="title1">Assign Services to <?php echo htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
-                    <form method="POST" action="" class="form-horizontal">
-                        <div class="form-group">
-                            <label for="service_id" class="col-sm-2 control-label">Select Service:</label>
-                            <div class="col-sm-10">
-                                <select name="service_id" id="service_id" class="form-control" required onchange="updatePrice(this)">
-                                    <option value="">Select a service</option>
-                                    <?php while ($service = mysqli_fetch_assoc($services_result)) { ?>
-                                        <option value="<?php echo $service['id']; ?>" data-price="<?php echo $service['price']; ?>">
-                                            <?php echo $service['service_name']; ?> - $<?php echo $service['price']; ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="price" class="col-sm-2 control-label">Price:</label>
-                            <div class="col-sm-10">
-                                <input type="text" name="price" id="price" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity" class="col-sm-2 control-label">Quantity:</label>
-                            <div class="col-sm-10">
-                                <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary">Assign Service</button>
-                            </div>
-                        </div>
-                    </form>
+                    <h3 class="title1">Assign Services</h3>
+                    <div class="table-responsive bs-example widget-shadow">
+                        <h4>Assign Services:</h4>
+                        <form method="post">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Service Name</th>
+                                        <th>Service Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $ret = mysqli_query($con, "SELECT * FROM services");
+                                    $cnt = 1;
+                                    while ($row = mysqli_fetch_array($ret)) {
+                                    ?>
+                                        <tr>
+                                            <th scope="row"><?php echo $cnt; ?></th>
+                                            <td><?php echo htmlspecialchars($row['service_name']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['price']); ?></td>
+                                            <td><input type="checkbox" name="sids[]" value="<?php echo $row['ID']; ?>"></td>
+                                        </tr>
+                                    <?php
+                                        $cnt++;
+                                    } ?>
+                                    <tr>
+                                        <td colspan="4" align="center">
+                                            <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Footer -->
         <?php include_once('includes/footer.php'); ?>
     </div>
 
+    <!-- Sidebar Menu Script -->
+    <script src="js/classie.js"></script>
     <script>
-        function updatePrice(selectElement) {
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            var price = selectedOption.getAttribute('data-price');
-            document.getElementById('price').value = price;
+        var menuLeft = document.getElementById('cbp-spmenu-s1'),
+            showLeftPush = document.getElementById('showLeftPush'),
+            body = document.body;
+
+        showLeftPush.onclick = function() {
+            classie.toggle(this, 'active');
+            classie.toggle(body, 'cbp-spmenu-push-toright');
+            classie.toggle(menuLeft, 'cbp-spmenu-open');
+            disableOther('showLeftPush');
+        };
+
+        function disableOther(button) {
+            if (button !== 'showLeftPush') {
+                classie.toggle(showLeftPush, 'disabled');
+            }
         }
     </script>
-    <script src="js/classie.js"></script>
+
+    <!-- Scrolling JS -->
     <script src="js/jquery.nicescroll.js"></script>
     <script src="js/scripts.js"></script>
+    <!-- Bootstrap JavaScript -->
     <script src="js/bootstrap.js"></script>
+
 </body>
+
 </html>

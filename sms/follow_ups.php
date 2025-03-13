@@ -64,6 +64,13 @@ $clients = fetchClients();
 
 <body>
     <?php include_once('header.php'); ?>
+    <script>
+        $(function() {
+            $('.navbar-toggler').click(function() {
+                $('body').toggleClass('noscroll');
+            });
+        });
+    </script>
 
     <div class="container mt-5 bg-white rounded shadow p-4">
         <h2 class="text-center py-3">Automated Follow-ups</h2>

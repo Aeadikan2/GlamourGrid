@@ -74,6 +74,27 @@ $totalsale = 0;
 		<div id="page-wrapper" class="row calender widget-shadow">
 			<div class="main-page">
 
+			<div id="admin-notification" class="alert alert-info" style="display:none; position: fixed; top: 10px; right: 10px; z-index: 1000;">
+    New Like Notification!
+</div>
+
+<script>
+function checkNotifications() {
+    $.ajax({
+        url: "fetch_notifications.php",
+        type: "GET",
+        success: function (response) {
+            var data = JSON.parse(response);
+            if (data.new_notification) {
+                $("#admin-notification").fadeIn().delay(3000).fadeOut();
+            }
+        }
+    });
+}
+
+// Check for new notifications every 5 seconds
+setInterval(checkNotifications, 5000);
+</script>
 
 				<div class="row calender widget-shadow">
 					<div class="row-one">

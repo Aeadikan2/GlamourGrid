@@ -15,6 +15,7 @@ if (isset($_POST['submit'])) {
 
     // Check if user exists
     $checkUser = mysqli_query($con, "SELECT id FROM users WHERE id = $uid");
+    var_dump($checkUser);
     if (mysqli_num_rows($checkUser) == 0) {
         echo '<script>alert("Error: Invalid user ID.")</script>';
         echo "<script>window.location.href ='invoices.php'</script>";
@@ -23,9 +24,20 @@ if (isset($_POST['submit'])) {
 
     // Ensure 'sids' is set and is an array
     $sid = isset($_POST['sids']) ? $_POST['sids'] : [];
-
+    
     if (count($sid) > 0) {
+
+         // Insert into billing table
+         $order_details = "order for $invoiceid"; 
+                
+         $stmt = $con->prepare("INSERT INTO billing (id, details) VALUES (?, ?)");
+         $stmt->bind_param("is", $invoiceid, $order_details); 
+         $stmt->execute();
+
         foreach ($sid as $svid) {
+            
+            $svid = intval($svid);
+
             // Fetch the price of the service
             $serviceQuery = mysqli_query($con, "SELECT price FROM services WHERE ID = $svid");
             if ($serviceData = mysqli_fetch_assoc($serviceQuery)) {
@@ -112,7 +124,7 @@ if (isset($_POST['submit'])) {
                                             <th scope="row"><?php echo $cnt; ?></th>
                                             <td><?php echo htmlspecialchars($row['service_name']); ?></td>
                                             <td><?php echo htmlspecialchars($row['price']); ?></td>
-                                            <td><input type="checkbox" name="sids[]" value="<?php echo $row['ID']; ?>"></td>
+                                            <td><input type="checkbox" name="sids[]" value="<?php echo intval($row['id']) ?>"></td>
                                         </tr>
                                     <?php
                                         $cnt++;

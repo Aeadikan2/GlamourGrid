@@ -1,7 +1,7 @@
 <?php
 // Database connection
 $host = 'localhost';
-$dbname = 'aeady salon';
+$dbname = 'Aeady salon';
 $user = 'root';
 $pass = '';
 $conn = new mysqli($host, $user, $pass, $dbname);
@@ -10,45 +10,26 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle new stylist creation with image upload
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'], $_POST['stylist_name'])) {
-    $stylist_name = $_POST['stylist_name'];
+// Function to update stylist availability based on bookings
+function updateStylistAvailability($conn) {
+    // Set all stylists to available
+    $resetQuery = "UPDATE stylists SET available = 1";
+    $conn->query($resetQuery);
 
-    // Handle file upload
-    $image = $_FILES["image"]["name"];
-    $image_temp = $_FILES["image"]["tmp_name"];
-    $image_error = $_FILES["image"]["error"];
-    $image_size = $_FILES["image"]["size"];
-    
-    // Get file extension
-    $image_extension = strtolower(pathinfo($image, PATHINFO_EXTENSION));
-    
-    // Allowed image extensions
-    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-    
-    // Validate image extension
-    if (!in_array($image_extension, $allowed_extensions)) {
-        $_SESSION['error'] = "Invalid format. Only jpg / jpeg / png / gif formats allowed.";
-    } else {
-        // Rename the image file
-        $new_image_name = md5($image . time()) . '.' . $image_extension;
-        $image_folder = 'uploads/stylists_images/';
-        
-        // Move the uploaded image to the images directory
-        if (move_uploaded_file($image_temp, $image_folder . $new_image_name)) {
-            // Insert stylist into the database
-            $stmt = $conn->prepare("INSERT INTO stylists (name, available, image) VALUES (?, 1, ?)");
-            $stmt->bind_param("ss", $stylist_name, $new_image_name);
-            if ($stmt->execute()) {
-                $_SESSION['message'] = "Stylist added successfully!";
-            } else {
-                $_SESSION['error'] = "Failed to add stylist.";
-            }
-        } else {
-            $_SESSION['error'] = "Failed to upload the image.";
-        }
-    }
+    // Set stylists with 4 or more bookings today to unavailable
+    $updateQuery = "UPDATE stylists 
+                    SET available = 0 
+                    WHERE id IN (
+                        SELECT StylistId FROM bookings 
+                        WHERE DATE(AptTime) = CURDATE()
+                        GROUP BY StylistId 
+                        HAVING COUNT(*) >= 4
+                    )";
+    $conn->query($updateQuery);
 }
+
+// Run the update function
+updateStylistAvailability($conn);
 
 // Fetch stylists
 $stylists_query = "SELECT * FROM stylists";
@@ -74,18 +55,16 @@ while ($row = $queue_result->fetch_assoc()) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlamourGrid Stylist Availability & Queue</title>
+    <title>GlamourGrid | Stylist Availability & Queue</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
     <?php include_once('header.php'); ?>
+
     <div class="container py-5">
-        <!-- Stylist Availability -->
         <div class="card mb-4">
             <div class="card-header bg-dark text-white">
                 <h3 class="card-title">Available Stylists</h3>
@@ -95,9 +74,6 @@ while ($row = $queue_result->fetch_assoc()) {
                     <?php foreach ($stylists as $stylist): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <?php if (!empty($stylist['image'])): ?>
-                                    <img src="uploads/stylists_images/<?php echo $stylist['image']; ?>" alt="Stylist Image" width="50" class="rounded-circle me-2">
-                                <?php endif; ?>
                                 <?php echo htmlspecialchars($stylist['name']); ?>
                             </div>
                             <?php if ($stylist['available']): ?>
@@ -133,22 +109,9 @@ while ($row = $queue_result->fetch_assoc()) {
                                 <td><?php echo $index + 1; ?></td>
                                 <td><?php echo htmlspecialchars($entry['AptNumber']); ?></td>
                                 <td><?php echo htmlspecialchars($entry['AptTime']); ?></td>
+                                <td><?php echo htmlspecialchars($entry['StylistName'] ?? 'Pending'); ?></td>
                                 <td>
-                                    <?php echo htmlspecialchars($entry['StylistName'] ?? 'Pending'); ?>
-                                    <?php if (!empty($entry['StylistImage'])): ?>
-                                        <img src="uploads/stylists_images/<?php echo $entry['StylistImage']; ?>" alt="Stylist Image" width="30" class="rounded-circle ms-2">
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    $status_badge = match ($entry['status']) {
-                                        'Pending' => 'badge bg-warning text-dark',
-                                        'In Progress' => 'badge bg-primary',
-                                        'Completed' => 'badge bg-success',
-                                        default => 'badge bg-secondary',
-                                    };
-                                    ?>
-                                    <span class="<?php echo $status_badge; ?>">
+                                    <span class="badge bg-<?php echo $entry['status'] === 'Completed' ? 'success' : ($entry['status'] === 'Pending' ? 'warning text-dark' : 'primary'); ?>">
                                         <?php echo htmlspecialchars($entry['status']); ?>
                                     </span>
                                 </td>
@@ -159,9 +122,7 @@ while ($row = $queue_result->fetch_assoc()) {
             </div>
         </div>
     </div>
+
     <?php include_once('footer.php'); ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

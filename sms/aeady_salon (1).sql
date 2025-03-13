@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2025 at 08:19 PM
+-- Generation Time: Mar 09, 2025 at 09:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,31 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `appointments`
---
-
-CREATE TABLE `appointments` (
-  `id` int(11) NOT NULL,
-  `appointment_number` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `service` varchar(255) NOT NULL,
-  `appointment_date` date NOT NULL,
-  `message` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `appointments`
---
-
-INSERT INTO `appointments` (`id`, `appointment_number`, `name`, `email`, `phone`, `service`, `appointment_date`, `message`, `created_at`) VALUES
-(1, 'APT1735898284475', 'Edikan Emmanuel Effiom', 'aeadikanemmanuel@gmail.com', '09038585075', 'Hair Coloring', '2025-01-16', 'edrfgthjk', '2025-01-03 09:58:04');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `billing`
 --
 
@@ -56,6 +31,25 @@ CREATE TABLE `billing` (
   `id` int(11) NOT NULL,
   `details` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `billing`
+--
+
+INSERT INTO `billing` (`id`, `details`) VALUES
+(206096942, 'order for 206096942'),
+(214190343, 'order for 214190343'),
+(311969982, 'order for 311969982'),
+(327778153, 'order for 327778153'),
+(351083361, 'order for 351083361'),
+(430553432, 'order for 430553432'),
+(535232939, 'order for 535232939'),
+(549803976, 'order for 549803976'),
+(622556792, 'order for 622556792'),
+(663626516, 'order for 663626516'),
+(744412992, 'order for 744412992'),
+(789490146, 'order for 789490146'),
+(895887789, 'order for 895887789');
 
 -- --------------------------------------------------------
 
@@ -75,36 +69,20 @@ CREATE TABLE `bookings` (
   `AptTime` time NOT NULL,
   `Status` enum('Pending','Accepted','Declined') DEFAULT 'Pending',
   `BookingDate` timestamp NOT NULL DEFAULT current_timestamp(),
-  `PhoneNumber` int(15) NOT NULL
+  `PhoneNumber` int(15) NOT NULL,
+  `reminded` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `AptNumber`, `ClientName`, `UserID`, `ServiceID`, `StylistID`, `Message`, `AptDate`, `AptTime`, `Status`, `BookingDate`, `PhoneNumber`) VALUES
-(8, 'APTB08EA2B4', 'Edikan Emmanuel Effiom', 1, 2, 1, 'gjdfgfgjjbjk', '2025-01-09', '07:17:00', 'Accepted', '2025-01-09 15:17:47', 2147483647),
-(9, 'APT212FAC6B', 'Edikan Emmanuel Effiom', 1, 3, 1, 'tyjgvbybhb', '2025-01-02', '04:29:00', 'Accepted', '2025-01-17 12:29:51', 2147483647),
-(13, 'APT4F3CD26A', 'Edikan  Effiom', 1, 18, 3, 'renijfjirj', '2025-02-11', '12:11:00', 'Declined', '2025-01-26 18:11:26', 2147483647),
-(14, 'APT146F0E52', 'Edikan Emmanuel Effiom', 1, 21, 1, 'thank you', '2025-02-06', '16:51:00', 'Accepted', '2025-01-29 12:48:13', 2147483647),
-(15, 'APT02FC4B4D', 'Collins Smith', 1, 15, 1, 'asdfghjklsdfghjkl;', '2025-02-25', '08:26:00', 'Accepted', '2025-02-10 13:23:18', 2147483647);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `follow_ups`
---
-
-CREATE TABLE `follow_ups` (
-  `id` int(11) NOT NULL,
-  `ClientID` int(11) NOT NULL,
-  `FollowupType` varchar(50) NOT NULL,
-  `Message` text NOT NULL,
-  `SendDate` date NOT NULL,
-  `SendTime` time NOT NULL,
-  `Status` varchar(20) DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `bookings` (`id`, `AptNumber`, `ClientName`, `UserID`, `ServiceID`, `StylistID`, `Message`, `AptDate`, `AptTime`, `Status`, `BookingDate`, `PhoneNumber`, `reminded`) VALUES
+(17, 'APTC3F186D3', 'Edikan Emmanuel Effiom', 4, 15, 4, 'asdfghjkwertyuiocvbn', '2025-03-05', '17:43:00', 'Accepted', '2025-02-24 21:44:04', 2147483647, 0),
+(18, 'APT610B28B4', 'Collins Smith', 3, 16, 3, 'zxcvbndfghjkrtyui', '2025-03-06', '07:29:00', 'Accepted', '2025-02-24 23:30:02', 2147483647, 0),
+(19, 'APTE72FD6B5', 'werty', 4, 18, 3, 'asdfghertyhj', '2025-03-06', '18:11:00', 'Accepted', '2025-02-26 10:11:40', 2147483647, 0),
+(23, 'APT446BE6A8', 'Edikan Emmanuel Effiom', 6, 15, 3, 'wndnjndijdbhbiub', '2025-03-12', '07:30:00', 'Accepted', '2025-03-04 13:36:24', 2147483647, 0),
+(24, 'APT3135F2D1', 'Edikan Emmanuel Effiom', 6, 18, 3, 'aesdrctfygvbhunijmk,l', '2025-03-12', '23:16:00', 'Accepted', '2025-03-08 16:16:42', 2147483647, 0);
 
 -- --------------------------------------------------------
 
@@ -126,10 +104,7 @@ CREATE TABLE `inquiries` (
 --
 
 INSERT INTO `inquiries` (`id`, `name`, `email`, `phone`, `message`, `created_at`) VALUES
-(1, 'Edikan Emmanuel', 'aeadikan223@gmail.com', '09038585075', 'where are you located at?', '2025-01-02 17:26:20'),
-(2, 'Edikan Emmanuel', 'aeadikan223@gmail.com', '09038585075', 'where are you located at?', '2025-01-02 17:41:28'),
-(5, 'fab', 'aeadikanemmanuel@gmail.com', '09038585075', 'i love okpa', '2025-01-02 19:14:37'),
-(6, 'Edikan Emmanuel Effiom', 'aeadikanemmanuel@gmail.com', '09038585076', 'w4e5crvtbuhinjk', '2025-01-08 11:54:35');
+(9, 'Edikan Emmanuel Effiom', 'aeadikanemmanuel@gmail.com', '09038585075', 'where are you at?', '2025-03-05 01:32:45');
 
 -- --------------------------------------------------------
 
@@ -149,37 +124,38 @@ CREATE TABLE `invoice` (
   `posting_date` timestamp NULL DEFAULT current_timestamp() COMMENT 'Date and time of the transaction'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Table for storing invoice details';
 
+--
+-- Dumping data for table `invoice`
+--
+
+INSERT INTO `invoice` (`id`, `user_id`, `service_id`, `billing_id`, `price`, `quantity`, `status`, `posting_date`) VALUES
+(18, NULL, 14, 622556792, 1500.00, 1, 'Pending', '2025-02-24 21:01:32'),
+(19, NULL, 20, 622556792, 3000.00, 1, 'Pending', '2025-02-24 21:01:32'),
+(20, NULL, 22, 622556792, 1000.00, 1, 'Pending', '2025-02-24 21:01:32'),
+(23, 3, 15, 214190343, 2000.00, 1, 'Pending', '2025-02-24 23:31:44'),
+(25, NULL, 18, 327778153, 5000.00, 1, 'Pending', '2025-02-26 10:15:06'),
+(26, 6, 18, 895887789, 5000.00, 1, 'Pending', '2025-03-04 13:52:53');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pricing_rules`
+-- Table structure for table `reviews`
 --
 
-CREATE TABLE `pricing_rules` (
+CREATE TABLE `reviews` (
   `id` int(11) NOT NULL,
-  `service_id` int(11) NOT NULL,
-  `rule_name` varchar(255) NOT NULL,
-  `rule_type` enum('time','day','season') NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `adjustment_type` enum('fixed','percentage') NOT NULL,
-  `adjustment_value` decimal(10,2) NOT NULL
+  `user_id` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `content` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `pricing_rules`
+-- Dumping data for table `reviews`
 --
 
-INSERT INTO `pricing_rules` (`id`, `service_id`, `rule_name`, `rule_type`, `value`, `adjustment_type`, `adjustment_value`) VALUES
-(1, 14, 'Peak Hours Surcharge', 'time', '18:00-21:00', 'percentage', 15.00),
-(2, 15, 'Weekend Discount', 'day', 'Saturday,Sunday', 'percentage', -10.00),
-(3, 16, 'Holiday Promo', 'season', 'Christmas', 'fixed', -500.00),
-(4, 17, 'Summer Discount', 'season', 'Summer', 'percentage', -5.00),
-(5, 18, 'Peak Hours Surcharge', 'time', '18:00-21:00', 'percentage', 20.00),
-(6, 19, 'Weekend Promo', 'day', 'Saturday,Sunday', 'fixed', -200.00),
-(7, 20, 'Holiday Premium', 'season', 'New Year', 'percentage', 10.00),
-(8, 21, 'Midweek Discount', 'day', 'Wednesday', 'percentage', -7.00),
-(9, 22, 'Seasonal Adjustment', 'season', 'Rainy Season', 'fixed', -100.00),
-(10, 23, 'Evening Surcharge', 'time', '18:00-21:00', 'percentage', 15.00);
+INSERT INTO `reviews` (`id`, `user_id`, `title`, `content`, `created_at`) VALUES
+(1, 6, 'money', 'sdfghjcvbn', '2025-03-04 21:34:51');
 
 -- --------------------------------------------------------
 
@@ -268,6 +244,9 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(150) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `image` varchar(255) DEFAULT 'default.jpg',
+  `address` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -276,21 +255,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`) VALUES
-(1, 'Edikan Emmanuel', 'aeadikanemmanuel@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '2025-01-03 08:46:10'),
-(2, 'John Doe', 'john@example.com', '482c811da5d5b4bc6d497ffa98491e38', '2025-01-03 09:49:36'),
-(3, 'Collins Smith', 'collins@gmail.com', '674f3c2c1a8a6f90461e8a66fb5550ba', '2025-02-10 13:26:12');
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `image`, `address`, `password`, `created_at`) VALUES
+(2, 'John Doe', 'john@example.com', '', 'default.jpg', '', '482c811da5d5b4bc6d497ffa98491e38', '2025-01-03 09:49:36'),
+(3, 'Collins Smith', 'collins@gmail.com', '', 'default.jpg', '', '674f3c2c1a8a6f90461e8a66fb5550ba', '2025-02-10 13:26:12'),
+(6, 'Edikan Emmanuel Effiom', 'aeadikan@gmail.com', '09038585075', 'c2.jpg', 'KMC street, Flat 1', '$2y$10$Y1LcBvKnlCyyB6jpfvU2TOohq5G0VfC7pvVFrF9RnG6fyNCKliaM2', '2025-03-04 12:22:00');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `appointments`
---
-ALTER TABLE `appointments`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `appointment_number` (`appointment_number`);
 
 --
 -- Indexes for table `billing`
@@ -304,13 +276,6 @@ ALTER TABLE `billing`
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `AptNumber` (`AptNumber`);
-
---
--- Indexes for table `follow_ups`
---
-ALTER TABLE `follow_ups`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `ClientID` (`ClientID`);
 
 --
 -- Indexes for table `inquiries`
@@ -328,11 +293,11 @@ ALTER TABLE `invoice`
   ADD KEY `billing_id_fk` (`billing_id`);
 
 --
--- Indexes for table `pricing_rules`
+-- Indexes for table `reviews`
 --
-ALTER TABLE `pricing_rules`
+ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `service_id` (`service_id`);
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `services`
@@ -353,46 +318,34 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `appointments`
---
-ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `billing`
 --
 ALTER TABLE `billing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=895887790;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT for table `follow_ups`
---
-ALTER TABLE `follow_ups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `inquiries`
 --
 ALTER TABLE `inquiries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT for table `pricing_rules`
+-- AUTO_INCREMENT for table `reviews`
 --
-ALTER TABLE `pricing_rules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+ALTER TABLE `reviews`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -404,31 +357,26 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `follow_ups`
---
-ALTER TABLE `follow_ups`
-  ADD CONSTRAINT `follow_ups_ibfk_1` FOREIGN KEY (`ClientID`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
 -- Constraints for table `invoice`
 --
 ALTER TABLE `invoice`
   ADD CONSTRAINT `billing_id_fk` FOREIGN KEY (`billing_id`) REFERENCES `billing` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `service_id_fk` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `pricing_rules`
+-- Constraints for table `reviews`
 --
-ALTER TABLE `pricing_rules`
-  ADD CONSTRAINT `pricing_rules_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE;
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

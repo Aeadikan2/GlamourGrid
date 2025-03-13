@@ -35,8 +35,15 @@ $result = $conn->query($sql);
 </head>
 <body>
 <?php include_once('header.php'); ?>
+<script>
+        $(function() {
+            $('.navbar-toggler').click(function() {
+                $('body').toggleClass('noscroll');
+            });
+        });
+    </script>
     <div class="container">
-        <h1 class="text-center mb-5">Our Services</h1>
+        <h1 class="text-center mt-5">Our Services</h1>
         <table class="service-table table table-bordered table-hover">
             <thead>
                 <tr>

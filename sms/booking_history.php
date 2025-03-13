@@ -54,6 +54,13 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
 <body>
 
 <?php include_once('header.php'); ?>
+<script>
+        $(function() {
+            $('.navbar-toggler').click(function() {
+                $('body').toggleClass('noscroll');
+            });
+        });
+    </script>
 
 <div class="container mt-5">
     <h2 class="text-center">Your Booking History</h2>
@@ -100,7 +107,7 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
                                 ?>
                             </td>
                             <td>
-                                <a href="appointment_details.php?appointment_number=<?php echo urlencode($booking['appointment_number']); ?>" class="btn btn-outline-light btn-sm">View</a>
+                                <a href="appointment_details.php?appointment_number=<?php echo urlencode($booking['appointment_number']); ?>" class="btn btn-contact btn-sm">View</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

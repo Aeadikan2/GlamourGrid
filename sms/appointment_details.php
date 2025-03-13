@@ -67,11 +67,18 @@ try {
 <body>
 
 <?php include_once('header.php'); ?>
+<script>
+        $(function() {
+            $('.navbar-toggler').click(function() {
+                $('body').toggleClass('noscroll');
+            });
+        });
+    </script>
 
 <div class="container mt-5">
     <h2 class="text-center">Appointment Details</h2>
 
-    <table class="table table-light table-strip">    
+    <table class="table table-grey table-strip">    
         <tr>
             <th>Appointment Number</th>
             <td><?php echo htmlspecialchars($appointment['appointment_number']); ?></td>
@@ -118,8 +125,8 @@ try {
         </tr>
     </table>
 
-    <div class="mt-3">
-        <a href="booking_history.php" class="btn btn-secondary">Back to Booking History</a>
+    <div class="text-end mb-3">
+        <a href="booking_history.php" class="btn btn-contact">Back to Booking History</a>
     </div>
 </div>
 

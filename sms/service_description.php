@@ -66,9 +66,22 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         font-weight: bold;
         font-size: 1.25rem;
     }
+
+    .btn-contact {
+        background-color: #e83e8c;
+        color: white;
+        border: none;
+    }
 </style>
 
 <body>
+<script>
+        $(function() {
+            $('.navbar-toggler').click(function() {
+                $('body').toggleClass('noscroll');
+            });
+        });
+    </script>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
             <a class="navbar-brand text-white" href="index.php">GlamourGrid</a>
@@ -85,8 +98,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link text-white" href="index.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="about.php">About</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="services.php">Services</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link text-white" href="about.php">About</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="services.php">Services</a></li> -->
                     <?php if (empty($_SESSION['user_id'])) { ?>
                         <li class="nav-item"><a class="nav-link" href="../admin/index.php">Admin</a></li>
                         <li class="nav-item"><a class="nav-link" href="signup.php">Signup</a></li>
@@ -99,24 +112,26 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                         <li class="nav-item"><a class="nav-link" href="change_password.php">Settings</a></li>
                         <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                     <?php } ?>
-                    <li class="nav-item"><a class="nav-link text-white" href="contact.php">Contact</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link text-white" href="contact.php">Contact</a></li> -->
+                    <li class="nav-item"><a class="nav-link btn btn-contact btn-lg" href="book_appointments.php">Book Salon</a></li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container mt-5">
-        <h2 class="text-center"><?php echo htmlspecialchars($service['service_name']); ?></h2>
+        <h1 class="text-center text-bold"><?php echo htmlspecialchars($service['service_name']); ?></h1>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 mb-5 mt-5">
                 <img src="<?php echo htmlspecialchars($service['image']); ?>" class="img-fluid rounded" alt="Service Image">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mt-5">
                 <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($service['description'])); ?></p>
                 <p><strong>Price:</strong> ₦<?php echo number_format($service['price'], 2); ?></p>
-                <a href="book_appointments.php?service_id=<?php echo $service['id']; ?>" class="btn btn-primary">Book Now</a>
+                <a href="book_appointments.php?service_id=<?php echo $service['id']; ?>" class="btn btn-contact mb-3">Book Now</a>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <?php include_once('footer.php'); ?>
 
 </body>

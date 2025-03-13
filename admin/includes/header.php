@@ -1,7 +1,6 @@
 <?php 
    
 ?>
-
 <div class="sticky-header header-section ">
     <div class="header-left">
         <!--toggle button start-->
@@ -78,7 +77,7 @@
         <div class="profile_details">  
             <?php
              if (!isset($_SESSION['bpmsaid'])) {
-                 header('Location: logout.php'); // Redirect to login page if not set
+                 header('Location: logout.php'); 
                  exit();
              }
 

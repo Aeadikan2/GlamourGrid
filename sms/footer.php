@@ -23,14 +23,14 @@
             <!-- Contact Info -->
             <div class="col-md-4 mb-3">
                 <h5>Contact Us</h5>
-                <p><i class="bi bi-geo-alt-fill"></i> 123 Beauty Lane, Glam City</p>
-                <p><i class="bi bi-envelope-fill"></i> aeadikanemmanuel@gmail.com</p>
+                <p><i class="bi bi-geo-alt-fill"></i> Karu Site, Abuja</p>
+                <p><i class="bi bi-envelope-fill"></i> apanel@gmail.com</p>
                 <p><i class="bi bi-telephone-fill"></i> +234 903 858 5075</p>
                 <div class="mt-2">
-                    <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+                    <!-- <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a> -->
                     <a href="#" class="text-light me-3"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="text-light"><i class="bi bi-youtube"></i></a>
+                    <a href="https://x.com/glamourgri?s=21" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+                    <!-- <a href="#" class="text-light"><i class="bi bi-youtube"></i></a> -->
                 </div>
             </div>
         </div>

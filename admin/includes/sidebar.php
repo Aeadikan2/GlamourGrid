@@ -22,35 +22,12 @@
                     </ul>
                 </li>
 
-                <!-- <li>
-                    <a href="#" data-toggle="collapse" data-target="#pagesMenu">
-                        <i class="fa fa-book nav_icon"></i>Pages <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level collapse" id="pagesMenu">
-                        <li><a href="about-us.php">About Us</a></li>
-                        <li><a href="contact-us.php">Contact Us</a></li>
-                    </ul>
-                </li> -->
-
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#appointmentsMenu">
                         <i class="fa fa-check-square-o nav_icon"></i>Appointments <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse" id="appointmentsMenu">
                         <li><a href="all-appointment.php">All Appointments</a></li>
-                        <li><a href="new-appointment.php">New Appointment</a></li>
-                        <li><a href="accepted-appointment.php">Accepted Appointment</a></li>
-                        <li><a href="rejected-appointment.php">Rejected Appointment</a></li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="#" data-toggle="collapse" data-target="#enquiriesMenu">
-                        <i class="fa fa-check-square-o nav_icon"></i>Enquiries <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level collapse" id="enquiriesMenu">
-                        <li><a href="readenq.php">Read Enquiry</a></li>
-                        <li><a href="unreadenq.php">Unread Enquiry</a></li>
                     </ul>
                 </li>
 
@@ -73,7 +50,15 @@
                 </li>
 
                 <li>
+                    <a href="admin_inquiries.php"><i class="fa fa-envelope nav_icon"></i> Contact Messages</a>
+                </li>
+
+                <li>
                     <a href="search-appointment.php"><i class="fa fa-search nav_icon"></i>Search Appointment</a>
+                </li>
+
+                <li>
+                    <a href="view-review.php"><i class="fa fa-comments nav_icon"></i>Client Feedback</a>
                 </li>
 
                 <li>
@@ -84,6 +69,7 @@
         </nav>
     </div>
 </div>
+
 <!-- Ensure jQuery and Bootstrap JavaScript are loaded -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -99,4 +85,4 @@
             $(target).collapse('toggle');
         });
     });
-</script>
+</script>     

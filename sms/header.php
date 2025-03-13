@@ -14,11 +14,12 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css"> <!-- Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: lightslategray;
+        background: linear-gradient(to right, white, lightpink);
         margin: 0;
         padding: 0;
         min-height: 100vh;
@@ -30,7 +31,7 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
         background-position: contain;
         color: white;
         text-align: center;
-        height: 100vh;
+        height: 85vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -75,6 +76,7 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
 
     .about {
         padding: 50px 0;
+        margin-bottom: 10px;
     }
 
     .about-layout {
@@ -101,10 +103,10 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
     }
 
     .video-section iframe {
-            width: 100%;
-            max-width: 720px;
-            height: auto;
-        }
+        width: 100%;
+        max-width: 720px;
+        height: auto;
+    }
 
     .para {
         color: #fff;
@@ -191,7 +193,6 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
     }
 
     a.stylists-link {
-        background-color: rgb(208, 8, 155);
         display: inline-block;
         padding: 5px;
         border-radius: 5px;
@@ -200,19 +201,19 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
 
     a.stylists-link:hover {
         background-color: #ffc0cb;
-        /* Slightly darker pink for hover effect */
     }
 
     .video-section {
-        background-color: #63768D;
+        /* background-color: #63768D; */
         padding: 50px 20px;
         text-align: center;
     }
 
-    .video-section h2 {
+    .video-section h1 {
         font-size: 2rem;
         color: #000;
         margin-bottom: 20px;
+        font-weight: bold;
     }
 
     .video-section iframe {
@@ -244,17 +245,55 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
     }
 
     .table-responsive {
-            overflow-x: auto; /* Ensure horizontal scrolling on smaller screens */
-        }
+        overflow-x: auto;
+        /* Ensure horizontal scrolling on smaller screens */
+    }
 
-        .btn-outline-light {
-            white-space: nowrap; /* Prevent button text from wrapping */
-        }
+    .btn-outline-light {
+        white-space: nowrap;
+        /* Prevent text wrapping */
+    }
+
+    .btn-contact {
+        background-color: #e83e8c;
+        color: white;
+        border: none;
+    }
+
+    .service-description {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px); /* Adjust the blur value as needed */
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+    }
+
+    .testimony-card {
+        background: #fff;
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin: 10px;
+    }
+
+    .testimony-card img {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
 </style>
 
-
-
 <body>
+<script>
+        $(function() {
+            $('.navbar-toggler').click(function() {
+                $('body').toggleClass('noscroll');
+            });
+        });
+    </script>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
@@ -274,30 +313,33 @@ $page_title = isset($page_title) ? $page_title : 'GlamourGrid'; // Default page 
                     <li class="nav-item"><a class="nav-link text-white" href="index.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="about.php">About</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="services.php">Services</a></li>
+      
                     <?php if (empty($_SESSION['user_id'])) { ?>
-                        <li class="nav-item"><a class="nav-link" href="../admin/index.php">Admin</a></li>
-                        <li class="nav-item"><a class="nav-link" href="signup.php">Signup</a></li>
-                        <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link" href="../admin/index.php">Admin</a></li> -->
+                        <li class="nav-item">
+    <a class="nav-link btn btn-contact" href="signup.php">Signup / Login</a>
+</li>
+                
                     <?php } else { ?>
-                        <li class="nav-item"><a class="nav-link" href="booking_history.php">Booking History</a></li>
-                        <!-- <li class="nav-item"><a class="nav-link" href="invoice_history.php">Invoice History</a></li> -->
+                        <!-- <li class="nav-item"><a class="nav-link" href="booking_history.php">Booking History</a></li>
+                        <li class="nav-item"><a class="nav-link" href="invoice_history.php">Invoice History</a></li>
                         <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" href="change-password.php">Settings</a></li>
-                        <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
-                    <?php } ?>
-                    <li class="nav-item"><a class="nav-link text-white" href="contact.php">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-pink btn-lg" href="book_appointments.php">Book Salon</a></li>
+                        <li class="nav-item"><a class="nav-link" href="change-password.php">Settings</a></li> -->
+                        <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li> 
+                        
+                    <li class="nav-item"><a class="nav-link btn btn-contact" href="../users/dashboard.php">Dashboard</a></li>
+
+                    <?php } ?> 
+                    <!-- <li class="nav-item"><a class="nav-link text-white" href="contact.php">Contact</a></li> -->
+                    <!-- <li class="nav-item"><a class="nav-link btn btn-pink btn-lg" href="book_appointments.php">Book Salon</a></li> -->
                 </ul>
-                <a href="stylists.php" title="View Stylists" class="stylists-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-calendar2-check" viewBox="0 0 16 16">
-                    <path d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0" />
-                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
-                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5z" />
-                </svg>
-            </a>
+
             </div>
         </div>
     </nav>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
